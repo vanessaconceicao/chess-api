@@ -1,4 +1,5 @@
-import express from 'express';
+import express from 'express'
+import calculatePositions from './calculatePositions'
 
 const app = express()
 
@@ -9,6 +10,8 @@ app.listen(app.get('port'), () => {
 })
 
 app.get('/api/move', (req, res) => {
-    console.log('Get movement')
+    const initialPosition = 'D4' //req.position
+    let next = calculatePositions(initialPosition)
+    console.log(next)
     res.sendStatus(200)
 })
