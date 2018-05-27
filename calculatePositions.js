@@ -1,6 +1,3 @@
-export let firstTurnPositions = []
-let secondTurnPositions = []
-
 const possibleMoves = [
     { x: -2, y: -1 },
     { x: -2, y: +1 },
@@ -13,12 +10,27 @@ const possibleMoves = [
 ]
 
 export default function findSecondTurnPositions(initialPosition) {
-    console.log('Find positions')
+
+    let firstTurnCoords = []
+    let secondTurnCoords = []
 
     const initialCoord = convertPositionToCoords(initialPosition)
-    calculateNextPositions(initialCoord)
+    
+    firstTurnCoords = calculateNextPositions(initialCoord)
+    firstTurnCoords = removeInvalidValues(firstTurnCoords)
 
-    return secondTurnPositions
+    //TODO refactor
+    firstTurnCoords.forEach((p) => {
+        let curr = calculateNextPositions(p)
+        secondTurnCoords.push(curr[0])
+        curr.reduce((obj, item) => {
+            secondTurnCoords.push(item)
+        })
+    })
+
+    secondTurnCoords = removeInvalidValues(secondTurnCoords)
+
+    return getSecondTurnPositions(secondTurnCoords)
 }
 
 export function convertPositionToCoords (position) {
@@ -53,14 +65,29 @@ export function convertPositionToCoords (position) {
 }
 
 export function calculateNextPositions (initialCoord) {
-    console.log(initialCoord)
 
-    possibleMoves.forEach((move) => {
-        let position = {}
-        position.x = initialCoord.x + move.x
-        position.y = initialCoord.y + move.y
-        firstTurnPositions.push(position)
+    return possibleMoves.map((move) => {
+        let next = {}
+        next.x = initialCoord.x + move.x
+        next.y = initialCoord.y + move.y
+        next.id = convertCoordToPosition(next)
+        return next
     })
+}
 
-    console.log(firstTurnPositions)
+export function removeInvalidValues (coords) {
+    return coords.filter((c) => {
+        return c.x > 0 && c.x <= 8 && c.y > 0 && c.y <= 8 
+    })
+}
+
+export function getSecondTurnPositions (coords) {
+    const uniquePositions = [...(new Set(coords.map(({ id }) => id)))];
+    return uniquePositions
+}
+
+export function convertCoordToPosition (coord) {
+    const string = 'ABCDEFGH'
+    let pos = `${string[coord.x-1]}${coord.y}`
+    return pos
 }

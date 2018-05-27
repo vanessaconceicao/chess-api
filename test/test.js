@@ -1,6 +1,6 @@
 import { equal } from 'assert'
 import { expect } from 'chai'
-import { convertPositionToCoords, calculateNextPositions, firstTurnPositions } from '../calculatePositions'
+import { convertPositionToCoords, calculateNextPositions, firstTurnPositions, convertCoordToPosition, removeInvalidValues, getSecondTurnPositions } from '../calculatePositions'
 
 
 describe('Test convertPositionToCoords', () => {
@@ -48,18 +48,100 @@ describe('Test convertPositionToCoords', () => {
 describe('Test calculateNextPositions', () => {
     it('should return all possible moves for an intial coordinate', () => {
         const initialCoord = {x: Math.round(Math.random()*7)+1, y: Math.round(Math.random()*7)+1 }
-        calculateNextPositions(initialCoord)
+        let result = calculateNextPositions(initialCoord)
         let expected = [
-            { x: initialCoord.x -2, y: initialCoord.y -1 },
-            { x: initialCoord.x -2, y: initialCoord.y +1 },
-            { x: initialCoord.x +2, y: initialCoord.y -1 },    
-            { x: initialCoord.x +2, y: initialCoord.y +1 },    
-            { x: initialCoord.x -1, y: initialCoord.y -2 },    
-            { x: initialCoord.x -1, y: initialCoord.y +2 },    
-            { x: initialCoord.x +1, y: initialCoord.y -2 },    
-            { x: initialCoord.x +1, y: initialCoord.y +2 }
+            { x: initialCoord.x -2, y: initialCoord.y -1, id: convertCoordToPosition({ x: initialCoord.x -2, y: initialCoord.y -1 })},
+            { x: initialCoord.x -2, y: initialCoord.y +1, id: convertCoordToPosition({ x: initialCoord.x -2, y: initialCoord.y +1 })},
+            { x: initialCoord.x +2, y: initialCoord.y -1, id: convertCoordToPosition({ x: initialCoord.x +2, y: initialCoord.y -1 })},    
+            { x: initialCoord.x +2, y: initialCoord.y +1, id: convertCoordToPosition({ x: initialCoord.x +2, y: initialCoord.y +1 })},    
+            { x: initialCoord.x -1, y: initialCoord.y -2, id: convertCoordToPosition({ x: initialCoord.x -1, y: initialCoord.y -2 })},    
+            { x: initialCoord.x -1, y: initialCoord.y +2, id: convertCoordToPosition({ x: initialCoord.x -1, y: initialCoord.y +2 })},    
+            { x: initialCoord.x +1, y: initialCoord.y -2, id: convertCoordToPosition({ x: initialCoord.x +1, y: initialCoord.y -2 })},    
+            { x: initialCoord.x +1, y: initialCoord.y +2, id: convertCoordToPosition({ x: initialCoord.x +1, y: initialCoord.y +2 })}
         ]
-        expect(firstTurnPositions).to.eql(expected)
+        expect(result).to.eql(expected)
     })
 })
 
+describe('Test removeInvalidPositions', () => {
+    it('Should remove the out of board coordinates', () => {
+        const positions = [
+            {x: 0, y: 4},
+            {x: 5, y: -1},
+            {x: 3, y: 2},
+            {x: 9, y: 1}
+        ]
+        const result = removeInvalidValues(positions)
+        const expected = [
+            {x: 3, y: 2}
+        ]
+
+        expect(result).to.eql(expected)
+    })
+})
+
+describe('Test getSecondTurnPositions', () => {
+    it('should return all unique positions in algebraic notation', () => {
+        const positions = [
+            { x: 2, y: 3, id: 'B3'},
+            { x: 1, y: 5, id: 'A5'},
+            { x: 2, y: 3, id: 'B3'},
+            { x: 3, y: 3, id: 'C3'},
+            { x: 1, y: 5, id: 'A5'},
+        ]
+        const expected = ['B3', 'A5', 'C3']
+        const result = getSecondTurnPositions(positions)
+        
+        expect(result).to.eql(expected)
+    })
+})
+
+describe('Test convertCoordToPosition', () => {
+    it('should return A when passing x: 1', () => {
+        const position = {x: 1, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'A')
+    })
+
+    it('should return B when passing x: 2', () => {
+        const position = {x: 2, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'B')
+    })
+
+    it('should return C when passing x: 3', () => {
+        const position = {x: 3, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'C')
+    })
+
+    it('should return D when passing x: 4', () => {
+        const position = {x: 4, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'D')
+    })
+
+    it('should return E when passing x: 5', () => {
+        const position = {x: 5, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'E')
+    })
+
+    it('should return F when passing x: 6', () => {
+        const position = {x: 6, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'F')
+    })
+
+    it('should return G when passing x: 7', () => {
+        const position = {x: 7, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'G')
+    })
+
+    it('should return H when passing x: 8', () => {
+        const position = {x: 8, y: 1}
+        const result = convertCoordToPosition(position)
+        equal(result[0], 'H')
+    })
+})

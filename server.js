@@ -11,7 +11,7 @@ app.listen(app.get('port'), () => {
 
 app.get('/api/move', (req, res) => {
     const initialPosition = 'D4' //req.position
-    let next = calculatePositions(initialPosition)
-    //console.log(next)
+    let nextPositions = calculatePositions(initialPosition)
+    console.log(nextPositions)
     res.sendStatus(200)
 })
