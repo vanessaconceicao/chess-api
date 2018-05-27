@@ -1,4 +1,5 @@
-let nextPositions = []
+export let firstTurnPositions = []
+let secondTurnPositions = []
 
 const possibleMoves = [
     { x: -2, y: -1 },
@@ -11,17 +12,17 @@ const possibleMoves = [
     { x: +1, y: +2 }
 ]
 
-export default function findNextPositions(initialPosition) {
-
-    const initialCoord = convertPosition(initialPosition)
-    calculateNextPosition(initialCoord)
-
+export default function findSecondTurnPositions(initialPosition) {
     console.log('Find positions')
-    return nextPositions
+
+    const initialCoord = convertPositionToCoords(initialPosition)
+    calculateNextPositions(initialCoord)
+
+    return secondTurnPositions
 }
 
-export function convertPosition (position) {
-    position = {x: position[0], y: position[1]}
+export function convertPositionToCoords (position) {
+    position = {x: position[0], y: Number(position[1])}
 
     switch (position.x) {
         case 'A': 
@@ -51,6 +52,15 @@ export function convertPosition (position) {
     }
 }
 
-function calculateNextPosition (initialCoord) {
+export function calculateNextPositions (initialCoord) {
+    console.log(initialCoord)
 
+    possibleMoves.forEach((move) => {
+        let position = {}
+        position.x = initialCoord.x + move.x
+        position.y = initialCoord.y + move.y
+        firstTurnPositions.push(position)
+    })
+
+    console.log(firstTurnPositions)
 }
