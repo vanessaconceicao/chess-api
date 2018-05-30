@@ -1,5 +1,5 @@
 import express from 'express'
-import calculatePositions from './calculatePositions'
+import calculatePositions, { invalidInitialPositionError } from './calculatePositions'
 
 const app = express()
 
@@ -16,12 +16,17 @@ app.listen(app.get('port'), () => {
 
 app.get('/api/move', (req, res) => {
   const initialPosition = req.query.position
-  let nextPositions = calculatePositions(initialPosition)
 
-  if (nextPositions) res.send(nextPositions)
-  else {
-    res.statusMessage =
-      'The initial position must be in Algebraic notation, A to H and 1 to 8'
-    res.status(400).end()
+  try {
+    let nextPositions = calculatePositions(initialPosition)
+    res.send(nextPositions)
+  } 
+  catch (error) {
+    if (error === invalidInitialPositionError) {
+      res.statusMessage = error.message
+      res.status(400).end()
+    }
+    else
+      res.status(500).end()
   }
 })

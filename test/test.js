@@ -53,75 +53,48 @@ describe('Test convertPositionToCoords', () => {
 
 describe('Test calculateNextPositions', () => {
   it('should return all possible moves for an intial coordinate', () => {
-    const initialCoord = {
-      x: Math.round(Math.random() * 7) + 1,
-      y: Math.round(Math.random() * 7) + 1
-    }
+    const initialCoord = { x: 3, y: 4}
     let result = calculateNextPositions(initialCoord)
     let expected = [
       {
         x: initialCoord.x - 2,
         y: initialCoord.y - 1,
-        id: convertCoordToPosition({
-          x: initialCoord.x - 2,
-          y: initialCoord.y - 1
-        })
+        id: convertCoordToPosition({ x: initialCoord.x - 2, y: initialCoord.y - 1 })
       },
       {
         x: initialCoord.x - 2,
         y: initialCoord.y + 1,
-        id: convertCoordToPosition({
-          x: initialCoord.x - 2,
-          y: initialCoord.y + 1
-        })
+        id: convertCoordToPosition({ x: initialCoord.x - 2, y: initialCoord.y + 1 })
       },
       {
         x: initialCoord.x + 2,
         y: initialCoord.y - 1,
-        id: convertCoordToPosition({
-          x: initialCoord.x + 2,
-          y: initialCoord.y - 1
-        })
+        id: convertCoordToPosition({ x: initialCoord.x + 2, y: initialCoord.y - 1 })
       },
       {
         x: initialCoord.x + 2,
         y: initialCoord.y + 1,
-        id: convertCoordToPosition({
-          x: initialCoord.x + 2,
-          y: initialCoord.y + 1
-        })
+        id: convertCoordToPosition({ x: initialCoord.x + 2, y: initialCoord.y + 1 })
       },
       {
         x: initialCoord.x - 1,
         y: initialCoord.y - 2,
-        id: convertCoordToPosition({
-          x: initialCoord.x - 1,
-          y: initialCoord.y - 2
-        })
+        id: convertCoordToPosition({ x: initialCoord.x - 1, y: initialCoord.y - 2 })
       },
       {
         x: initialCoord.x - 1,
         y: initialCoord.y + 2,
-        id: convertCoordToPosition({
-          x: initialCoord.x - 1,
-          y: initialCoord.y + 2
-        })
+        id: convertCoordToPosition({ x: initialCoord.x - 1, y: initialCoord.y + 2 })
       },
       {
         x: initialCoord.x + 1,
         y: initialCoord.y - 2,
-        id: convertCoordToPosition({
-          x: initialCoord.x + 1,
-          y: initialCoord.y - 2
-        })
+        id: convertCoordToPosition({ x: initialCoord.x + 1, y: initialCoord.y - 2 })
       },
       {
         x: initialCoord.x + 1,
         y: initialCoord.y + 2,
-        id: convertCoordToPosition({
-          x: initialCoord.x + 1,
-          y: initialCoord.y + 2
-        })
+        id: convertCoordToPosition({ x: initialCoord.x + 1, y: initialCoord.y + 2 })
       }
     ]
     deepEqual(result, expected)

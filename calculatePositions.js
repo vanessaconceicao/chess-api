@@ -11,29 +11,32 @@ const possibleMoves = [
 
 const letters = 'ABCDEFGH'
 
+export const invalidInitialPositionError = new Error('The initial position must be in Algebraic notation, A to H and 1 to 8')
+
 export default function findSecondTurnPositions(initialPosition) {
-  if (isValidPosition(initialPosition)) {
-    let firstTurnCoords = []
-    let secondTurnCoords = []
+  if (!isValidPosition(initialPosition)) 
+    throw invalidInitialPositionError
+    
+  let firstTurnCoords = []
+  let secondTurnCoords = []
 
-    const initialCoord = convertPositionToCoords(initialPosition)
+  const initialCoord = convertPositionToCoords(initialPosition)
 
-    firstTurnCoords = calculateNextPositions(initialCoord)
-    firstTurnCoords = removeInvalidValues(firstTurnCoords)
+  firstTurnCoords = calculateNextPositions(initialCoord)
+  firstTurnCoords = removeInvalidValues(firstTurnCoords)
 
-    firstTurnCoords.forEach(p => {
-      let curr = calculateNextPositions(p)
-      secondTurnCoords.push(curr[0])
-      curr.reduce((obj, item) => {
-        secondTurnCoords.push(item)
-      })
+  firstTurnCoords.forEach(p => {
+    let curr = calculateNextPositions(p)
+    secondTurnCoords.push(curr[0])
+    curr.reduce((obj, item) => {
+      secondTurnCoords.push(item)
     })
+  })
 
-    secondTurnCoords = removeInvalidValues(secondTurnCoords)
+  secondTurnCoords = removeInvalidValues(secondTurnCoords)
 
-    return getSecondTurnPositions(secondTurnCoords)
-  }
-  return false
+  return getSecondTurnPositions(secondTurnCoords)
+  
 }
 
 export function convertPositionToCoords(position) {
