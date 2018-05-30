@@ -9,32 +9,38 @@ const possibleMoves = [
     { x: +1, y: +2 }
 ]
 
+const letters = 'ABCDEFGH'
+
 export default function findSecondTurnPositions(initialPosition) {
 
-    let firstTurnCoords = []
-    let secondTurnCoords = []
+    if (isValidPosition(initialPosition)) {
 
-    const initialCoord = convertPositionToCoords(initialPosition)
-    
-    firstTurnCoords = calculateNextPositions(initialCoord)
-    firstTurnCoords = removeInvalidValues(firstTurnCoords)
+        let firstTurnCoords = []
+        let secondTurnCoords = []
 
-    //TODO refactor
-    firstTurnCoords.forEach((p) => {
-        let curr = calculateNextPositions(p)
-        secondTurnCoords.push(curr[0])
-        curr.reduce((obj, item) => {
-            secondTurnCoords.push(item)
+        const initialCoord = convertPositionToCoords(initialPosition)
+        
+        firstTurnCoords = calculateNextPositions(initialCoord)
+        firstTurnCoords = removeInvalidValues(firstTurnCoords)
+
+        //TODO refactor
+        firstTurnCoords.forEach((p) => {
+            let curr = calculateNextPositions(p)
+            secondTurnCoords.push(curr[0])
+            curr.reduce((obj, item) => {
+                secondTurnCoords.push(item)
+            })
         })
-    })
 
-    secondTurnCoords = removeInvalidValues(secondTurnCoords)
+        secondTurnCoords = removeInvalidValues(secondTurnCoords)
 
-    return getSecondTurnPositions(secondTurnCoords)
+        return getSecondTurnPositions(secondTurnCoords)
+    }
+    return false
 }
 
 export function convertPositionToCoords (position) {
-    position = {x: position[0], y: Number(position[1])}
+    position = {x: position[0].toUpperCase(), y: Number(position[1])}
 
     switch (position.x) {
         case 'A': 
@@ -87,7 +93,21 @@ export function getSecondTurnPositions (coords) {
 }
 
 export function convertCoordToPosition (coord) {
-    const string = 'ABCDEFGH'
-    let pos = `${string[coord.x-1]}${coord.y}`
+    let pos = `${letters[coord.x-1]}${coord.y}`
     return pos
+}
+
+export function isValidPosition (initialPosition) {
+    if (initialPosition) {
+        const correctSize = initialPosition.length === 2
+
+        const positionX = initialPosition[0].toUpperCase()
+        const positionY = initialPosition[1]
+
+        const correctX = letters.includes(positionX)
+        const correctY = positionY > 0 && positionY <= 8
+
+        return correctX && correctY && correctSize 
+    }
+    return false
 }

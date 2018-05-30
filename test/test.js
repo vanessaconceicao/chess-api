@@ -1,6 +1,5 @@
-import { equal } from 'assert'
-import { expect } from 'chai'
-import { convertPositionToCoords, calculateNextPositions, firstTurnPositions, convertCoordToPosition, removeInvalidValues, getSecondTurnPositions } from '../calculatePositions'
+import { equal, deepEqual, ok } from 'assert'
+import { convertPositionToCoords, calculateNextPositions, firstTurnPositions, convertCoordToPosition, removeInvalidValues, getSecondTurnPositions, isValidPosition } from '../calculatePositions'
 
 
 describe('Test convertPositionToCoords', () => {
@@ -59,7 +58,7 @@ describe('Test calculateNextPositions', () => {
             { x: initialCoord.x +1, y: initialCoord.y -2, id: convertCoordToPosition({ x: initialCoord.x +1, y: initialCoord.y -2 })},    
             { x: initialCoord.x +1, y: initialCoord.y +2, id: convertCoordToPosition({ x: initialCoord.x +1, y: initialCoord.y +2 })}
         ]
-        expect(result).to.eql(expected)
+        deepEqual(result, expected)
     })
 })
 
@@ -76,7 +75,7 @@ describe('Test removeInvalidPositions', () => {
             {x: 3, y: 2}
         ]
 
-        expect(result).to.eql(expected)
+        deepEqual(result, expected)
     })
 })
 
@@ -92,7 +91,7 @@ describe('Test getSecondTurnPositions', () => {
         const expected = ['B3', 'A5', 'C3']
         const result = getSecondTurnPositions(positions)
         
-        expect(result).to.eql(expected)
+        deepEqual(result, expected)
     })
 })
 
@@ -145,3 +144,24 @@ describe('Test convertCoordToPosition', () => {
         equal(result[0], 'H')
     })
 })
+
+describe('Test isValidPosition', () => {
+    it('should return false if initial position is not in Algebraic notation', () => {
+        const initialPosition = '18'
+        const result = isValidPosition(initialPosition)
+        equal(result, false)
+    })
+
+    it('should return false if initial position length is greater than 2', () => {
+        const initialPosition = 'A85'
+        const result = isValidPosition(initialPosition)
+        equal(result, false)
+    })
+
+    it('should return true if initial position is in Algebraic notation', () => {
+        const initialPosition = 'A8'
+        const result = isValidPosition(initialPosition)
+        ok(result)
+    })
+})
+
