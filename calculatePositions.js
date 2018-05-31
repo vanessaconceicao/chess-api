@@ -11,32 +11,26 @@ const possibleMoves = [
 
 const letters = 'ABCDEFGH'
 
-export const invalidInitialPositionError = new Error('The initial position must be in Algebraic notation, A to H and 1 to 8')
+export const invalidInitialPositionError = new Error(
+  'The initial position must be in Algebraic notation, A to H and 1 to 8'
+)
 
-export default function findSecondTurnPositions(initialPosition) {
-  if (!isValidPosition(initialPosition)) 
-    throw invalidInitialPositionError
-    
+export default function findPositionsAfterSecondTurn(initialPosition) {
+  if (!isValidPosition(initialPosition)) throw invalidInitialPositionError
+
   let firstTurnCoords = []
   let secondTurnCoords = []
+  let nextCoords = []
 
   const initialCoord = convertPositionToCoords(initialPosition)
 
-  firstTurnCoords = calculateNextPositions(initialCoord)
-  firstTurnCoords = removeInvalidValues(firstTurnCoords)
+  firstTurnCoords = getNextTurnCoords([initialCoord])
 
-  firstTurnCoords.forEach(p => {
-    let curr = calculateNextPositions(p)
-    secondTurnCoords.push(curr[0])
-    curr.reduce((obj, item) => {
-      secondTurnCoords.push(item)
-    })
-  })
+  secondTurnCoords = getNextTurnCoords(firstTurnCoords)
 
-  secondTurnCoords = removeInvalidValues(secondTurnCoords)
+  nextCoords = getNextTurnCoords(secondTurnCoords)
 
-  return getSecondTurnPositions(secondTurnCoords)
-  
+  return removeDuplicatedPositions(nextCoords)
 }
 
 export function convertPositionToCoords(position) {
@@ -70,7 +64,18 @@ export function convertPositionToCoords(position) {
   }
 }
 
-export function calculateNextPositions(initialCoord) {
+export function getNextTurnCoords(currentTurnCoords) {
+  let nextTurnCoords = []
+  currentTurnCoords.forEach(c => {
+    let curr = calculateNextCoords(c)
+    curr.forEach(item => {
+      nextTurnCoords.push(item)
+    })
+  })
+  return removeInvalidCoords(nextTurnCoords)
+}
+
+export function calculateNextCoords(initialCoord) {
   return possibleMoves.map(move => {
     let next = {}
     next.x = initialCoord.x + move.x
@@ -80,15 +85,14 @@ export function calculateNextPositions(initialCoord) {
   })
 }
 
-export function removeInvalidValues(coords) {
+export function removeInvalidCoords(coords) {
   return coords.filter(c => {
     return c.x > 0 && c.x <= 8 && c.y > 0 && c.y <= 8
   })
 }
 
-export function getSecondTurnPositions(coords) {
-  const uniquePositions = [...new Set(coords.map(({ id }) => id))]
-  return uniquePositions
+export function removeDuplicatedPositions(coords) {
+  return [...new Set(coords.map(({ id }) => id))]
 }
 
 export function convertCoordToPosition(coord) {

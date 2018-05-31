@@ -1,12 +1,13 @@
 import { equal, deepEqual, ok } from 'assert'
 import {
   convertPositionToCoords,
-  calculateNextPositions,
+  calculateNextCoords,
   firstTurnPositions,
   convertCoordToPosition,
-  removeInvalidValues,
-  getSecondTurnPositions,
-  isValidPosition
+  removeInvalidCoords,
+  removeDuplicatedPositions,
+  isValidPosition,
+  getNextTurnCoords
 } from '../calculatePositions'
 
 describe('Test convertPositionToCoords', () => {
@@ -51,10 +52,40 @@ describe('Test convertPositionToCoords', () => {
   })
 })
 
-describe('Test calculateNextPositions', () => {
-  it('should return all possible moves for an intial coordinate', () => {
+describe('Test getNextTurnCoords', () => {
+  it('should return the next valid coords for a set of coordinates', () => {
+    const currentTurnCoords = [
+      { x: 4, y: 3, id: 'D3' },
+      { x: 2, y: 5, id: 'B5' }
+    ]
+
+    const expected = [
+      { x: 2, y: 2, id: 'B2' },
+      { x: 2, y: 4, id: 'B4' },
+      { x: 6, y: 2, id: 'F2' },
+      { x: 6, y: 4, id: 'F4' },
+      { x: 3, y: 1, id: 'C1' },
+      { x: 3, y: 5, id: 'C5' },
+      { x: 5, y: 1, id: 'E1' },
+      { x: 5, y: 5, id: 'E5' },
+      { x: 4, y: 4, id: 'D4' },
+      { x: 4, y: 6, id: 'D6' },
+      { x: 1, y: 3, id: 'A3' },
+      { x: 1, y: 7, id: 'A7' },
+      { x: 3, y: 3, id: 'C3' },
+      { x: 3, y: 7, id: 'C7' }
+    ]
+
+    const result = getNextTurnCoords(currentTurnCoords)
+
+    deepEqual(result, expected)
+  })
+})
+
+describe('Test calculateNexCoords', () => {
+  it('should return all possible coord for an intial coordinate', () => {
     const initialCoord = { x: 3, y: 4}
-    let result = calculateNextPositions(initialCoord)
+    let result = calculateNextCoords(initialCoord)
     let expected = [
       {
         x: initialCoord.x - 2,
@@ -101,7 +132,7 @@ describe('Test calculateNextPositions', () => {
   })
 })
 
-describe('Test removeInvalidPositions', () => {
+describe('Test removeInvalidCoords', () => {
   it('Should remove the out of board coordinates', () => {
     const positions = [
       { x: 0, y: 4 },
@@ -109,14 +140,14 @@ describe('Test removeInvalidPositions', () => {
       { x: 3, y: 2 },
       { x: 9, y: 1 }
     ]
-    const result = removeInvalidValues(positions)
+    const result = removeInvalidCoords(positions)
     const expected = [{ x: 3, y: 2 }]
 
     deepEqual(result, expected)
   })
 })
 
-describe('Test getSecondTurnPositions', () => {
+describe('Test removeDuplicatedPositions', () => {
   it('should return all unique positions in algebraic notation', () => {
     const positions = [
       { x: 2, y: 3, id: 'B3' },
@@ -126,7 +157,7 @@ describe('Test getSecondTurnPositions', () => {
       { x: 1, y: 5, id: 'A5' }
     ]
     const expected = ['B3', 'A5', 'C3']
-    const result = getSecondTurnPositions(positions)
+    const result = removeDuplicatedPositions(positions)
 
     deepEqual(result, expected)
   })
