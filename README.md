@@ -23,14 +23,20 @@ chess-api/
 
 In the project directory, you can run:
 
-### `npm install`
+```
+  npm install
+```
 
 Installs the project dependences.
 
-### `npm start`
+```
+  npm start
+```
 
 Runs the server in http://localhost:3001.
 
-### `npm test`
+```
+  npm test
+```
 
 Launches the test runner in the interactive watch mode.
