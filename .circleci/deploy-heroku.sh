@@ -1,4 +1,5 @@
 BRANCH=$1
+echo BRANCH
 
 if [ -z $BRANCH ]; then
   BRANCH='development'
