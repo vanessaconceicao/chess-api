@@ -23,8 +23,6 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm run test-ci
-
       - deploy:
           command: |
             bash ./.circleci/add-ssh-hosts.sh
