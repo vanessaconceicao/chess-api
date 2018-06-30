@@ -26,9 +26,7 @@ jobs:
       - deploy:
           command: |
             bash ./.circleci/add-ssh-hosts.sh
-            echo "Current branch ${CIRCLE_BRANCH}"
             if [ "${CIRCLE_BRANCH}" == "development" ] || [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "Start deploy"
               git remote -v
               bash ./.circleci/install-packages.sh
               bash ./.circleci/deploy-heroku.sh $CIRCLE_BRANCH
